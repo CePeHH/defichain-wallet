@@ -172,7 +172,7 @@ export function AboutScreen(): JSX.Element {
                 "text-2xs leading-4 font-normal-v2 uppercase text-center",
               )}
             >
-              {translate("screens/AboutScreen", "Birthday Research")}
+              {translate("screens/AboutScreen", "Birthday Research/Community")}
             </ThemedTextV2>
           </View>
 

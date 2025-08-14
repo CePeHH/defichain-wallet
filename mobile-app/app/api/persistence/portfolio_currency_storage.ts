@@ -4,14 +4,14 @@ import { PortfolioButtonGroupTabKey } from "@screens/AppNavigator/screens/Portfo
 const KEY = "WALLET.PORTFOLIO_CURRENCY";
 
 async function set(
-  denominationCurrency: NonNullable<PortfolioButtonGroupTabKey>
+  denominationCurrency: NonNullable<PortfolioButtonGroupTabKey>,
 ): Promise<void> {
   await AsyncStorage.setItem(KEY, JSON.stringify(denominationCurrency));
 }
 
 async function get(): Promise<PortfolioButtonGroupTabKey> {
   const val = await AsyncStorage.getItem(KEY);
-  return val != null ? JSON.parse(val) : "USDT";
+  return val != null ? JSON.parse(val) : PortfolioButtonGroupTabKey.USDT;
 }
 
 export const PortfolioCurrencyPersistence = {

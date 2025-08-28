@@ -3,7 +3,7 @@
     "name": "DeFiChain Wallet",
     "description": "DeFi Blockchain Light Wallet for iOS, Android & Web.",
     "slug": "wallet",
-    "owner": "defichain",
+    "owner": "defichaincommunity",
     "version": "0.0.0",
     "orientation": "portrait",
     "icon": "./shared/assets/images/icon.png",

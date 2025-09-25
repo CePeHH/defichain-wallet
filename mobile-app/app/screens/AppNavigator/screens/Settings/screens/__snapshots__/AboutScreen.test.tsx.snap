@@ -230,7 +230,7 @@ exports[`<AboutScreen /> should match snapshot 1`] = `
               ]
             }
           >
-            Birthday Research
+            Birthday Research/Community
           </Text>
         </View>
         <View

@@ -12,7 +12,7 @@ import { useThemeContext, WalletPersistenceDataI } from "@waveshq/walletkit-ui";
 import { translate } from "@translations";
 import { HeaderNetworkStatus } from "@components/HeaderNetworkStatus";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getDefaultTheme } from "@screens/theme";
+import { getDefaultTheme } from "@constants/Theme";
 import { PinCreation } from "@screens/WalletNavigator/screens/CreateWallet/PinCreation";
 import { PinConfirmation } from "@screens/WalletNavigator/screens/CreateWallet/PinConfirmation";
 import { Onboarding } from "@screens/WalletNavigator/screens/Onboarding";

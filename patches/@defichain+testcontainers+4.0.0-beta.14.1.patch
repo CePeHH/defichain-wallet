@@ -1,0 +1,26 @@
+diff --git a/node_modules/@defichain/testcontainers/dist/containers/AppContainer/PlaygroundApiContainer.js b/node_modules/@defichain/testcontainers/dist/containers/AppContainer/PlaygroundApiContainer.js
+index 8c6a5e5..260aed6 100644
+--- a/node_modules/@defichain/testcontainers/dist/containers/AppContainer/PlaygroundApiContainer.js
++++ b/node_modules/@defichain/testcontainers/dist/containers/AppContainer/PlaygroundApiContainer.js
+@@ -25,7 +25,7 @@ const package_json_1 = __importDefault(require("../../../package.json"));
+ const PLAYGROUND_VERSION = package_json_1.default.version === '0.0.0' ? 'latest' : package_json_1.default.version;
+ const PLAYGROUND_API_PORT = 3000;
+ class PlaygroundApiContainer extends testcontainers_1.GenericContainer {
+-    constructor(image = `ghcr.io/birthdayresearch/playground-api:${PLAYGROUND_VERSION}`) {
++    constructor(image = `ghcr.io/davidpushmedia/playground-api:${PLAYGROUND_VERSION}`) {
+         super(image);
+         this.withExposedPorts(PLAYGROUND_API_PORT).withStartupTimeout(120000);
+     }
+diff --git a/node_modules/@defichain/testcontainers/dist/containers/AppContainer/WhaleApiContainer.js b/node_modules/@defichain/testcontainers/dist/containers/AppContainer/WhaleApiContainer.js
+index 746f737..fdcedba 100644
+--- a/node_modules/@defichain/testcontainers/dist/containers/AppContainer/WhaleApiContainer.js
++++ b/node_modules/@defichain/testcontainers/dist/containers/AppContainer/WhaleApiContainer.js
+@@ -25,7 +25,7 @@ const WHALE_API_PORT = 3000;
+  */
+ const WHALE_VERSION = package_json_1.default.version === '0.0.0' ? 'latest' : package_json_1.default.version;
+ class WhaleApiContainer extends testcontainers_1.GenericContainer {
+-    constructor(image = `ghcr.io/birthdayresearch/whale-api:${WHALE_VERSION}`) {
++    constructor(image = `ghcr.io/davidpushmedia/whale-api:${WHALE_VERSION}`) {
+         super(image);
+         this.withExposedPorts(WHALE_API_PORT).withStartupTimeout(120000);
+     }

@@ -16,6 +16,7 @@
       "@api/*": ["api/*"],
       "@assets": ["../../shared/assets"],
       "@assets/*": ["../../shared/assets/*"],
+      "@constants/*": ["constants/*"],
       "@contexts/*": ["contexts/*"],
       "@components": ["components"],
       "@components/*": ["components/*"],

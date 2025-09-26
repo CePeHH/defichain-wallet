@@ -7,7 +7,7 @@ import { tailwind } from "@tailwind";
 import { EnvironmentName, getEnvironment } from "@waveshq/walletkit-core";
 import { getReleaseChannel } from "@api/releaseChannel";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { getDefaultTheme } from "@screens/theme";
+import { getDefaultTheme } from "@constants/Theme";
 import { RootNavigator } from "./RootNavigator";
 import { PlaygroundNavigator } from "./PlaygroundNavigator/PlaygroundNavigator";
 

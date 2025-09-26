@@ -18,7 +18,7 @@ import { Platform, View } from "react-native";
 import { tailwind } from "@tailwind";
 import { useThemeContext } from "@waveshq/walletkit-ui";
 import { CreateOrEditAddressLabelFormProps } from "@screens/AppNavigator/screens/Portfolio/components/CreateOrEditAddressLabelForm";
-import { getDefaultTheme } from "@screens/theme";
+import { getDefaultTheme } from "@constants/Theme";
 import { ThemedViewV2 } from "@components/themed";
 import { BottomSheetModal as BottomSheetModalWeb } from "./BottomSheetModal.web";
 import { BackIcon } from "./icons/BackIcon";

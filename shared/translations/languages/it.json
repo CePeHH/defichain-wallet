@@ -73,7 +73,8 @@
     "Tap the star icon to add your favorite pools here": "Tap the star icon to add your favorite pools here",
     "Total value locked": "Valore totale bloccato",
     "Search results for “{{input}}”": "Search results for “{{input}}”",
-    "Search for pool pair with token name": "Search for pool pair with token name"
+    "Search for pool pair with token name": "Search for pool pair with token name",
+    "Show inactive pairs": "Mostra coppie inattive"
   },
   "screens/PortfolioScreen": {
     "Balances": "Saldo",

@@ -73,7 +73,8 @@
     "Tap the star icon to add your favorite pools here": "Pulsa el icono de la estrella para añadir a favoritos",
     "Total value locked": "Valor total bloqueado",
     "Search results for “{{input}}”": "Buscar resultados para “{{input}}”",
-    "Search for pool pair with token name": "Buscar por nombre en los pares de pool"
+    "Search for pool pair with token name": "Buscar por nombre en los pares de pool",
+    "Show inactive pairs": "Mostrar pares inactivos"
   },
   "screens/PortfolioScreen": {
     "Balances": "Saldos",

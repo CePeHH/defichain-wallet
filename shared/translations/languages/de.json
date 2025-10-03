@@ -72,7 +72,8 @@
     "Tap the star icon to add your favorite pools here": "Tippe auf das Sternsymbol, um einen Favoriten hinzuzufügen",
     "Total value locked": "Fixierter Gesamtwert",
     "Search results for “{{input}}”": "Suchergebnisse für “{{input}}”",
-    "Search for pool pair with token name": "Suche nach Poolpaar über den Token-Namen"
+    "Search for pool pair with token name": "Suche nach Poolpaar über den Token-Namen",
+    "Show inactive pairs": "Inaktive Paare anzeigen"
   },
   "screens/PortfolioScreen": {
     "Balances": "Guthaben",

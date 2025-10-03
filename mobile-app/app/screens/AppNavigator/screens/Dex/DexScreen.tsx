@@ -4,7 +4,7 @@ import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { useSelector } from "react-redux";
-import { View } from "@components";
+import { Switch, View } from "@components";
 import {
   SkeletonLoader,
   SkeletonLoaderScreen,
@@ -48,7 +48,7 @@ export function DexScreen(): JSX.Element {
   const navigation = useNavigation<NavigationProp<DexParamList>>();
   const [activeTab, setActiveTab] = useState<string>(TabKey.AvailablePoolPair);
   const tokens = useSelector((state: RootState) =>
-    tokensSelector(state.wallet)
+    tokensSelector(state.wallet),
   );
 
   const onButtonGroupChange = (buttonGroupTabKey: ButtonGroupTabKey): void => {
@@ -57,7 +57,7 @@ export function DexScreen(): JSX.Element {
   };
 
   const { poolpairs: pairs, hasFetchedPoolpairData } = useSelector(
-    (state: RootState) => state.wallet
+    (state: RootState) => state.wallet,
   );
   const yourLPTokens = useSelector(() => {
     const _yourLPTokens: Array<DexItem<WalletToken>> = tokens
@@ -147,16 +147,19 @@ export function DexScreen(): JSX.Element {
   const [filteredAvailablePairs, setFilteredAvailablePairs] =
     useState<Array<DexItem<PoolPairData>>>(pairs);
   const [isSearching, setIsSearching] = useState(false);
+  const [showInactivePairs, setShowInactivePairs] = useState(false);
   const handleFilter = useCallback(
     debounce((searchString: string) => {
       setIsSearching(false);
       if (searchString !== undefined && searchString.trim().length > 0) {
         setFilteredAvailablePairs(
           pairs
-            .filter((pair) =>
-              pair.data.displaySymbol
-                .toLowerCase()
-                .includes(searchString.trim().toLowerCase())
+            .filter(
+              (pair) =>
+                (showInactivePairs || pair.data.status) &&
+                pair.data.displaySymbol
+                  .toLowerCase()
+                  .includes(searchString.trim().toLowerCase()),
             )
             .sort(
               (firstPair, secondPair) =>
@@ -165,14 +168,14 @@ export function DexScreen(): JSX.Element {
                   .toNumber() ??
                 new BigNumber(secondPair.data.id)
                   .minus(firstPair.data.id)
-                  .toNumber()
-            )
+                  .toNumber(),
+            ),
         );
       } else {
         setFilteredAvailablePairs([]);
       }
     }, 500),
-    [activeTab, pairs]
+    [activeTab, pairs, showInactivePairs],
   );
 
   useEffect(() => {
@@ -211,7 +214,7 @@ export function DexScreen(): JSX.Element {
   }, [showSearchInput, searchString]);
 
   const [activeButtonGroup, setActiveButtonGroup] = useState<ButtonGroupTabKey>(
-    ButtonGroupTabKey.AllPairs
+    ButtonGroupTabKey.AllPairs,
   );
   const { isFavouritePoolpair, favouritePoolpairs } =
     useFavouritePoolpairContext();
@@ -220,6 +223,9 @@ export function DexScreen(): JSX.Element {
     (buttonGroupTabKey: ButtonGroupTabKey) => {
       const filteredPairs = pairs
         .filter((pair) => {
+          if (!showInactivePairs && !pair.data.status) {
+            return false;
+          }
           const tokenADisplaySymbol = pair.data.tokenA.displaySymbol;
           const tokenBDisplaySymbol = pair.data.tokenB.displaySymbol;
 
@@ -250,11 +256,11 @@ export function DexScreen(): JSX.Element {
               .toNumber() ??
             new BigNumber(secondPair.data.id)
               .minus(firstPair.data.id)
-              .toNumber()
+              .toNumber(),
         );
       setFilteredAvailablePairs(filteredPairs);
     },
-    [pairs, favouritePoolpairs]
+    [pairs, favouritePoolpairs, showInactivePairs],
   );
 
   useEffect(() => {
@@ -262,7 +268,7 @@ export function DexScreen(): JSX.Element {
       setIsSearching(true);
       handleFilter(searchString);
     }
-  }, [searchString, hasFetchedPoolpairData]);
+  }, [searchString, hasFetchedPoolpairData, showInactivePairs, handleFilter]);
 
   // Update local state - filter available pair when pairs update
   useEffect(() => {
@@ -274,7 +280,16 @@ export function DexScreen(): JSX.Element {
     if (searchString !== undefined && searchString.trim().length > 0) {
       handleFilter(searchString);
     }
-  }, [pairs, favouritePoolpairs]);
+  }, [
+    pairs,
+    favouritePoolpairs,
+    showInactivePairs,
+    activeButtonGroup,
+    showSearchInput,
+    searchString,
+    handleButtonFilter,
+    handleFilter,
+  ]);
 
   const onSearchBtnPress = (): void => {
     setShowSearchInput(true);
@@ -293,7 +308,7 @@ export function DexScreen(): JSX.Element {
           new BigNumber(secondPair.data.totalLiquidity.usd ?? 0)
             .minus(firstPair.data.totalLiquidity.usd ?? 0)
             .toNumber() ??
-          new BigNumber(secondPair.data.id).minus(firstPair.data.id).toNumber()
+          new BigNumber(secondPair.data.id).minus(firstPair.data.id).toNumber(),
       )
       .slice(0, 5);
     setTopLiquidityPairs(sorted);
@@ -322,11 +337,11 @@ export function DexScreen(): JSX.Element {
               ? translate(
                   "screens/DexScreen",
                   "Search results for “{{input}}”",
-                  { input: searchString?.trim() }
+                  { input: searchString?.trim() },
                 )
               : translate(
                   "screens/DexScreen",
-                  "Search for pool pair with token name"
+                  "Search for pool pair with token name",
                 )}
           </ThemedTextV2>
         </View>
@@ -336,7 +351,7 @@ export function DexScreen(): JSX.Element {
             light={tailwind("bg-mono-light-v2-00 border-mono-light-v2-100")}
             dark={tailwind("bg-mono-dark-v2-00 border-mono-dark-v2-100")}
             style={tailwind(
-              "flex flex-col items-center pt-4 rounded-b-2xl border-b"
+              "flex flex-col items-center pt-4 rounded-b-2xl border-b",
             )}
           >
             <View style={tailwind("w-full px-5")}>
@@ -354,6 +369,8 @@ export function DexScreen(): JSX.Element {
               onSearchBtnPress={onSearchBtnPress}
               onButtonGroupChange={onButtonGroupChange}
               activeButtonGroup={activeButtonGroup}
+              showInactivePairs={showInactivePairs}
+              onToggleInactivePairs={setShowInactivePairs}
             />
           )}
         </>
@@ -413,6 +430,8 @@ const DexFilterPillGroup = React.memo(
     onSearchBtnPress: () => void;
     onButtonGroupChange: (buttonGroupTabKey: ButtonGroupTabKey) => void;
     activeButtonGroup: ButtonGroupTabKey;
+    showInactivePairs: boolean;
+    onToggleInactivePairs: (value: boolean) => void;
   }) => {
     const buttonGroup = [
       {
@@ -447,7 +466,7 @@ const DexFilterPillGroup = React.memo(
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={tailwind(
-              "flex justify-between items-center flex-row px-5"
+              "flex justify-between items-center flex-row px-5",
             )}
           >
             <ThemedTouchableOpacityV2
@@ -476,8 +495,27 @@ const DexFilterPillGroup = React.memo(
               />
             ))}
           </ScrollView>
+          <ThemedViewV2
+            style={tailwind("flex-row items-center justify-between px-5 mt-4")}
+            light={tailwind("bg-transparent")}
+            dark={tailwind("bg-transparent")}
+          >
+            <ThemedTextV2
+              style={tailwind("font-normal-v2 text-xs")}
+              light={tailwind("text-mono-light-v2-700")}
+              dark={tailwind("text-mono-dark-v2-700")}
+              testID="dex_show_inactive_pairs_label"
+            >
+              {translate("screens/DexScreen", "Show inactive pairs")}
+            </ThemedTextV2>
+            <Switch
+              value={props.showInactivePairs}
+              onValueChange={props.onToggleInactivePairs}
+              testID="dex_show_inactive_pairs_switch"
+            />
+          </ThemedViewV2>
         </ThemedViewV2>
       </View>
     );
-  }
+  },
 );

@@ -72,7 +72,8 @@
     "Tap the star icon to add your favorite pools here": "Tap the star icon to add your favorite pools here",
     "Total value locked": "总体价值锁定",
     "Search results for “{{input}}”": "Search results for “{{input}}”",
-    "Search for pool pair with token name": "Search for pool pair with token name"
+    "Search for pool pair with token name": "Search for pool pair with token name",
+    "Show inactive pairs": "显示非活跃交易对"
   },
   "screens/PortfolioScreen": {
     "Balances": "我的资产",

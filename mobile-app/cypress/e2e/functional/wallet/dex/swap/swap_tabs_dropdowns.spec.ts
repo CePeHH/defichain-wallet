@@ -95,17 +95,23 @@ context("Wallet - DEX - disabled pool pairs", { testIsolation: false }, () => {
     cy.getByTestID("bottom_tab_dex").click();
   });
 
-  it("should disable pool swap button if pair is disabled on API", () => {
+  it("should hide inactive pool pairs by default and allow enabling them", () => {
     cy.getByTestID("dex_action_button_composite_swap_button_26").should(
       "have.css",
       "opacity", // using opacity to check enable
       "1",
     ); // status: true
     cy.getByTestID("dex_action_button_composite_swap_button_28").should(
+      "not.exist",
+    ); // status: false hidden by default
+
+    cy.getByTestID("dex_show_inactive_pairs_switch").click();
+
+    cy.getByTestID("dex_action_button_composite_swap_button_28").should(
       "have.css",
       "opacity", // using opacity to check disable
       "0.3",
-    ); // status: false
+    ); // status: false when shown
   });
 });
 

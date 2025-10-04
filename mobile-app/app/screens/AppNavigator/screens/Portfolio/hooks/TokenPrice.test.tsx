@@ -166,6 +166,150 @@ describe("Token Price - Get Token Price (DEX)", () => {
         },
       },
     },
+    {
+      type: "available",
+      data: {
+        id: "21",
+        symbol: "USDC-DFI",
+        displaySymbol: "dUSDC-DFI",
+        name: "Playground USDC-Default Defi token",
+        status: true,
+        tokenA: {
+          symbol: "USDC",
+          displaySymbol: "dUSDC",
+          id: "5",
+          reserve: "5000",
+          blockCommission: "0",
+          name: "Playground USDC",
+        },
+        tokenB: {
+          symbol: "DFI",
+          displaySymbol: "DFI",
+          id: "0",
+          reserve: "50000",
+          blockCommission: "0",
+          name: "DeFiChain",
+        },
+        priceRatio: {
+          ab: "10",
+          ba: "0.1",
+        },
+        commission: "0",
+        totalLiquidity: {
+          token: "7500",
+          usd: "75000",
+        },
+        tradeEnabled: true,
+        ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+        rewardPct: "0.1",
+        rewardLoanPct: "0.1",
+        creation: {
+          tx: "f41085d0b0a9b223072f8df09bc8713b7d79a5ed9655e76b9bd084c89661c2af",
+          height: 200,
+        },
+        apr: {
+          reward: 10.1234,
+          total: 10.1234,
+          commission: 0,
+        },
+      },
+    },
+    {
+      type: "available",
+      data: {
+        id: "22",
+        symbol: "DUSD-DFI",
+        displaySymbol: "DUSD-DFI",
+        name: "Decentralized USD-Default Defi token",
+        status: true,
+        tokenA: {
+          symbol: "DUSD",
+          displaySymbol: "DUSD",
+          id: "12",
+          reserve: "10000",
+          blockCommission: "0",
+          name: "Decentralized USD",
+        },
+        tokenB: {
+          symbol: "DFI",
+          displaySymbol: "DFI",
+          id: "0",
+          reserve: "100000",
+          blockCommission: "0",
+          name: "DeFiChain",
+        },
+        priceRatio: {
+          ab: "10",
+          ba: "0.1",
+        },
+        commission: "0",
+        totalLiquidity: {
+          token: "10000",
+          usd: "100000",
+        },
+        tradeEnabled: true,
+        ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+        rewardPct: "0.1",
+        rewardLoanPct: "0.1",
+        creation: {
+          tx: "f32c0de483060a3d6db3db5bba0b9742a0d053aafaf6346926229ec8b6f97a00",
+          height: 201,
+        },
+        apr: {
+          reward: 12.3456,
+          total: 12.3456,
+          commission: 0,
+        },
+      },
+    },
+    {
+      type: "available",
+      data: {
+        id: "23",
+        symbol: "EUROC-DUSD",
+        displaySymbol: "dEUROC-DUSD",
+        name: "Playground EUROC-Decentralized USD token",
+        status: true,
+        tokenA: {
+          symbol: "EUROC",
+          displaySymbol: "dEUROC",
+          id: "24",
+          reserve: "4000",
+          blockCommission: "0",
+          name: "Playground EUROC",
+        },
+        tokenB: {
+          symbol: "DUSD",
+          displaySymbol: "DUSD",
+          id: "12",
+          reserve: "3600",
+          blockCommission: "0",
+          name: "Decentralized USD",
+        },
+        priceRatio: {
+          ab: "1.11111111",
+          ba: "0.9",
+        },
+        commission: "0",
+        totalLiquidity: {
+          token: "6500",
+          usd: "6500",
+        },
+        tradeEnabled: true,
+        ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+        rewardPct: "0.1",
+        rewardLoanPct: "0.1",
+        creation: {
+          tx: "aa9ce3048ce2376f0a9b47a195c6dece3136eb2290a28adb9ecf5313fb5a0446",
+          height: 202,
+        },
+        apr: {
+          reward: 9.8765,
+          total: 9.8765,
+          commission: 0,
+        },
+      },
+    },
   ];
 
   const initialState = {
@@ -235,6 +379,37 @@ describe("Token Price - Get Token Price (DEX)", () => {
             },
           },
         },
+        DUSD: {
+          BTC: {
+            denominationPrice: "10000.00000000",
+            token: {
+              id: "1",
+              symbol: "BTC",
+              displaySymbol: "dBTC",
+              name: "Bitcoin",
+            },
+          },
+          ETH: {
+            denominationPrice: "100.00000000",
+            token: {
+              id: "2",
+              symbol: "ETH",
+              displaySymbol: "dETH",
+              name: "Ethereum",
+            },
+          },
+          DFI: {
+            denominationPrice: "10000.00000000",
+            token: {
+              id: "0",
+              symbol: "DFI",
+              displaySymbol: "DFI",
+              name: "DeFiChain",
+            },
+          },
+        },
+        USDC: {},
+        EUROC: {},
       },
       swappableTokens: {},
       hasFetchedPoolpairData: false,
@@ -258,13 +433,13 @@ describe("Token Price - Get Token Price (DEX)", () => {
   it("should be able to get the token price", () => {
     const { result } = renderHook(() => useTokenPrice(), { wrapper });
     expect(
-      result.current.getTokenPrice("BTC", new BigNumber("1"), false)
+      result.current.getTokenPrice("BTC", new BigNumber("1"), false),
     ).toStrictEqual(new BigNumber("10000"));
     expect(
-      result.current.getTokenPrice("ETH", new BigNumber("1"), false)
+      result.current.getTokenPrice("ETH", new BigNumber("1"), false),
     ).toStrictEqual(new BigNumber("100"));
     expect(
-      result.current.getTokenPrice("USDT", new BigNumber("12"), false)
+      result.current.getTokenPrice("USDT", new BigNumber("12"), false),
     ).toStrictEqual(new BigNumber("12"));
   });
 
@@ -280,7 +455,26 @@ describe("Token Price - Get Token Price (DEX)", () => {
     const usdTokenA = tokenAAmount.times(10000); // USDT price for tokenA
     const usdTokenB = tokenBAmount.times(10000); // USDT price for tokenB
     expect(
-      result.current.getTokenPrice("BTC-DFI", new BigNumber("1"), true)
+      result.current.getTokenPrice("BTC-DFI", new BigNumber("1"), true),
     ).toStrictEqual(usdTokenA.plus(usdTokenB));
+  });
+
+  it("should use supported denominations as fallback for USDC", () => {
+    const { result } = renderHook(() => useTokenPrice("USDC"), { wrapper });
+
+    expect(
+      result.current.getTokenPrice("BTC", new BigNumber("1"), false),
+    ).toStrictEqual(new BigNumber("10000"));
+    expect(
+      result.current.getTokenPrice("USDT", new BigNumber("2"), false),
+    ).toStrictEqual(new BigNumber("2"));
+  });
+
+  it("should use supported denominations as fallback for EUROC", () => {
+    const { result } = renderHook(() => useTokenPrice("EUROC"), { wrapper });
+
+    expect(
+      result.current.getTokenPrice("BTC", new BigNumber("1"), false),
+    ).toStrictEqual(new BigNumber("9000"));
   });
 });

@@ -53,6 +53,15 @@ function checkPortfolioPageDenominationValues(
   });
 }
 
+function expectPositiveValue(testID: string): void {
+  cy.getByTestID(testID)
+    .invoke("text")
+    .then((text) => {
+      const numeric = parseFloat(text.replace(/[^0-9.]/g, ""));
+      expect(numeric).to.be.greaterThan(0);
+    });
+}
+
 function togglePortfolioDenomination(denomination: string): void {
   cy.getByTestID("portfolio_active_currency")
     .invoke("text")
@@ -66,65 +75,399 @@ function togglePortfolioDenomination(denomination: string): void {
     });
 }
 
-const getDexPrice = (price: {
-  [token: string]: string;
-}): { data: DexPricesResult } => ({
-  data: {
-    denomination: {
-      id: "3",
+const samplePoolPairs = [
+  {
+    id: "15",
+    symbol: "BTC-DFI",
+    displaySymbol: "dBTC-DFI",
+    name: "Playground BTC-Default Defi token",
+    status: true,
+    tokenA: {
+      symbol: "BTC",
+      displaySymbol: "dBTC",
+      id: "1",
+      reserve: "5",
+      blockCommission: "0",
+      name: "Bitcoin",
+    },
+    tokenB: {
+      symbol: "DFI",
+      displaySymbol: "DFI",
+      id: "0",
+      reserve: "1000",
+      blockCommission: "0",
+      name: "DeFiChain",
+    },
+    priceRatio: {
+      ab: "1",
+      ba: "1",
+    },
+    commission: "0",
+    totalLiquidity: {
+      token: "2500",
+      usd: "20000000",
+    },
+    tradeEnabled: true,
+    ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+    rewardPct: "0.1",
+    rewardLoanPct: "0.1",
+    creation: {
+      tx: "79b5f7853f55f762c7550dd7c734dff0a473898bfb5639658875833accc6d461",
+      height: 132,
+    },
+    apr: {
+      reward: 66.8826,
+      total: 66.8826,
+      commission: 0,
+    },
+  },
+  {
+    id: "20",
+    symbol: "USDT-DFI",
+    displaySymbol: "USDT-DFI",
+    name: "Decentralized USD-Default Defi token",
+    status: true,
+    tokenA: {
       symbol: "USDT",
+      displaySymbol: "dUSDT",
+      id: "14",
+      reserve: "8300",
+      blockCommission: "0",
+      name: "Tether",
+    },
+    tokenB: {
+      symbol: "DFI",
+      displaySymbol: "DFI",
+      id: "0",
+      reserve: "100",
+      blockCommission: "0",
+      name: "DeFiChain",
+    },
+    priceRatio: {
+      ab: "10",
+      ba: "0.1",
+    },
+    commission: "0.02",
+    totalLiquidity: {
+      token: "2500",
+      usd: "16660",
+    },
+    tradeEnabled: true,
+    ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+    rewardPct: "0.1",
+    rewardLoanPct: "0.1",
+    creation: {
+      tx: "4b8d5ec122052cdb8e8ffad63865444a10edc396d44e52957758ef7a39b228fa",
+      height: 147,
+    },
+    apr: {
+      reward: 80291.23649459783,
+      total: 80291.23649459783,
+      commission: 0,
+    },
+  },
+  {
+    id: "16",
+    symbol: "ETH-DFI",
+    displaySymbol: "dETH-DFI",
+    name: "Playground ETH-Default Defi token",
+    status: true,
+    tokenA: {
+      symbol: "ETH",
+      displaySymbol: "dETH",
+      id: "2",
+      reserve: "100000",
+      blockCommission: "0",
+      name: "Ethereum",
+    },
+    tokenB: {
+      symbol: "DFI",
+      displaySymbol: "DFI",
+      id: "0",
+      reserve: "1000",
+      blockCommission: "0",
+      name: "DeFiChain",
+    },
+    priceRatio: {
+      ab: "100",
+      ba: "0.01",
+    },
+    commission: "0",
+    totalLiquidity: {
+      token: "10000",
+      usd: "20000000",
+    },
+    tradeEnabled: true,
+    ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+    rewardPct: "0.1",
+    rewardLoanPct: "0.1",
+    creation: {
+      tx: "ac61a7ee391c2beb02043e76df4cde2baa2a7778ee6a1d4ec616a0b112462231",
+      height: 147,
+    },
+    apr: {
+      reward: 66.8826,
+      total: 66.8826,
+      commission: 0,
+    },
+  },
+  {
+    id: "21",
+    symbol: "USDC-DFI",
+    displaySymbol: "dUSDC-DFI",
+    name: "Playground USDC-Default Defi token",
+    status: true,
+    tokenA: {
+      symbol: "USDC",
+      displaySymbol: "dUSDC",
+      id: "5",
+      reserve: "5000",
+      blockCommission: "0",
+      name: "Playground USDC",
+    },
+    tokenB: {
+      symbol: "DFI",
+      displaySymbol: "DFI",
+      id: "0",
+      reserve: "50000",
+      blockCommission: "0",
+      name: "DeFiChain",
+    },
+    priceRatio: {
+      ab: "10",
+      ba: "0.1",
+    },
+    commission: "0",
+    totalLiquidity: {
+      token: "7500",
+      usd: "75000",
+    },
+    tradeEnabled: true,
+    ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+    rewardPct: "0.1",
+    rewardLoanPct: "0.1",
+    creation: {
+      tx: "f41085d0b0a9b223072f8df09bc8713b7d79a5ed9655e76b9bd084c89661c2af",
+      height: 200,
+    },
+    apr: {
+      reward: 10.1234,
+      total: 10.1234,
+      commission: 0,
+    },
+  },
+  {
+    id: "22",
+    symbol: "DUSD-DFI",
+    displaySymbol: "DUSD-DFI",
+    name: "Decentralized USD-Default Defi token",
+    status: true,
+    tokenA: {
+      symbol: "DUSD",
+      displaySymbol: "DUSD",
+      id: "12",
+      reserve: "10000",
+      blockCommission: "0",
+      name: "Decentralized USD",
+    },
+    tokenB: {
+      symbol: "DFI",
+      displaySymbol: "DFI",
+      id: "0",
+      reserve: "100000",
+      blockCommission: "0",
+      name: "DeFiChain",
+    },
+    priceRatio: {
+      ab: "10",
+      ba: "0.1",
+    },
+    commission: "0",
+    totalLiquidity: {
+      token: "10000",
+      usd: "100000",
+    },
+    tradeEnabled: true,
+    ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+    rewardPct: "0.1",
+    rewardLoanPct: "0.1",
+    creation: {
+      tx: "f32c0de483060a3d6db3db5bba0b9742a0d053aafaf6346926229ec8b6f97a00",
+      height: 201,
+    },
+    apr: {
+      reward: 12.3456,
+      total: 12.3456,
+      commission: 0,
+    },
+  },
+  {
+    id: "23",
+    symbol: "EUROC-DUSD",
+    displaySymbol: "dEUROC-DUSD",
+    name: "Playground EUROC-Decentralized USD token",
+    status: true,
+    tokenA: {
+      symbol: "EUROC",
+      displaySymbol: "dEUROC",
+      id: "24",
+      reserve: "4000",
+      blockCommission: "0",
+      name: "Playground EUROC",
+    },
+    tokenB: {
+      symbol: "DUSD",
+      displaySymbol: "DUSD",
+      id: "12",
+      reserve: "3600",
+      blockCommission: "0",
+      name: "Decentralized USD",
+    },
+    priceRatio: {
+      ab: "1.11111111",
+      ba: "0.9",
+    },
+    commission: "0",
+    totalLiquidity: {
+      token: "6500",
+      usd: "6500",
+    },
+    tradeEnabled: true,
+    ownerAddress: "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy",
+    rewardPct: "0.1",
+    rewardLoanPct: "0.1",
+    creation: {
+      tx: "aa9ce3048ce2376f0a9b47a195c6dece3136eb2290a28adb9ecf5313fb5a0446",
+      height: 202,
+    },
+    apr: {
+      reward: 9.8765,
+      total: 9.8765,
+      commission: 0,
+    },
+  },
+];
+const getDexPrice = (
+  denomination: string,
+  price: { [token: string]: string },
+): { data: DexPricesResult } => {
+  const denominationMeta: Record<
+    string,
+    { id: string; displaySymbol: string; name: string }
+  > = {
+    USDT: {
+      id: "3",
       displaySymbol: "dUSDT",
       name: "Playground USDT",
     },
-    dexPrices: {
-      DUSD: {
-        token: {
-          id: "12",
-          symbol: "DUSD",
-          displaySymbol: "DUSD",
-          name: "Decentralized USD",
-        },
-        denominationPrice: price.dusd,
-      },
-      USDC: {
-        token: {
-          id: "5",
-          symbol: "USDC",
-          displaySymbol: "dUSDC",
-          name: "Playground USDC",
-        },
-        denominationPrice: price.usdc,
-      },
-      ETH: {
-        token: {
-          id: "2",
-          symbol: "ETH",
-          displaySymbol: "dETH",
-          name: "Playground ETH",
-        },
-        denominationPrice: price.eth,
-      },
-      BTC: {
-        token: {
-          id: "1",
-          symbol: "BTC",
-          displaySymbol: "dBTC",
-          name: "Playground BTC",
-        },
-        denominationPrice: price.btc,
-      },
-      DFI: {
-        token: {
-          id: "0",
-          symbol: "DFI",
-          displaySymbol: "DFI",
-          name: "Default Defi token",
-        },
-        denominationPrice: price.dfi,
-      },
+    DUSD: {
+      id: "12",
+      displaySymbol: "DUSD",
+      name: "Decentralized USD",
     },
-  },
-});
+    USDC: {
+      id: "5",
+      displaySymbol: "dUSDC",
+      name: "Playground USDC",
+    },
+    EUROC: {
+      id: "24",
+      displaySymbol: "dEUROC",
+      name: "Playground EUROC",
+    },
+    DFI: {
+      id: "0",
+      displaySymbol: "DFI",
+      name: "DeFiChain",
+    },
+    BTC: {
+      id: "1",
+      displaySymbol: "dBTC",
+      name: "Playground BTC",
+    },
+    ETH: {
+      id: "2",
+      displaySymbol: "dETH",
+      name: "Playground ETH",
+    },
+  };
+
+  const dexPrices: DexPricesResult["dexPrices"] =
+    {} as DexPricesResult["dexPrices"];
+
+  if (price.dusd !== undefined) {
+    dexPrices.DUSD = {
+      token: {
+        id: "12",
+        symbol: "DUSD",
+        displaySymbol: "DUSD",
+        name: "Decentralized USD",
+      },
+      denominationPrice: price.dusd,
+    };
+  }
+
+  if (price.usdc !== undefined) {
+    dexPrices.USDC = {
+      token: {
+        id: "5",
+        symbol: "USDC",
+        displaySymbol: "dUSDC",
+        name: "Playground USDC",
+      },
+      denominationPrice: price.usdc,
+    };
+  }
+
+  if (price.eth !== undefined) {
+    dexPrices.ETH = {
+      token: {
+        id: "2",
+        symbol: "ETH",
+        displaySymbol: "dETH",
+        name: "Playground ETH",
+      },
+      denominationPrice: price.eth,
+    };
+  }
+
+  if (price.btc !== undefined) {
+    dexPrices.BTC = {
+      token: {
+        id: "1",
+        symbol: "BTC",
+        displaySymbol: "dBTC",
+        name: "Playground BTC",
+      },
+      denominationPrice: price.btc,
+    };
+  }
+
+  if (price.dfi !== undefined) {
+    dexPrices.DFI = {
+      token: {
+        id: "0",
+        symbol: "DFI",
+        displaySymbol: "DFI",
+        name: "Default Defi token",
+      },
+      denominationPrice: price.dfi,
+    };
+  }
+
+  return {
+    data: {
+      denomination: {
+        id: denominationMeta[denomination]?.id ?? "0",
+        symbol: denomination,
+        displaySymbol:
+          denominationMeta[denomination]?.displaySymbol ?? denomination,
+        name: denominationMeta[denomination]?.name ?? denomination,
+      },
+      dexPrices,
+    },
+  };
+};
 
 const addTokensWithFourCategories = [
   {
@@ -183,15 +526,39 @@ function interceptTokenWithSampleData(): void {
 
 context("Wallet - Portfolio", { testIsolation: false }, () => {
   beforeEach(() => {
-    cy.intercept("**/poolpairs/dexprices?denomination=*", {
-      body: getDexPrice({
-        dusd: "1",
-        usdc: "1.00000000",
-        eth: "100.00000000",
-        btc: "10000.00000000",
-        dfi: "10.00000000",
-      }),
+    cy.intercept("**/poolpairs/dexprices?denomination=*", (req) => {
+      const denomination = (req.query.denomination as string) ?? "USDT";
+
+      if (denomination === "USDC" || denomination === "EUROC") {
+        req.reply(getDexPrice(denomination, {}));
+        return;
+      }
+
+      const pricePayload =
+        denomination === "DUSD"
+          ? {
+              dusd: "1.00000000",
+              usdc: "1.00000000",
+              eth: "100.00000000",
+              btc: "10000.00000000",
+              dfi: "10.00000000",
+            }
+          : {
+              dusd: "1",
+              usdc: "1.00000000",
+              eth: "100.00000000",
+              btc: "10000.00000000",
+              dfi: "10.00000000",
+            };
+
+      req.reply(getDexPrice(denomination, pricePayload));
     }).as("getDexPrices");
+
+    cy.intercept("**/poolpairs?size=*", {
+      body: {
+        data: samplePoolPairs,
+      },
+    }).as("getPoolPairs");
   });
 
   before(() => {
@@ -491,6 +858,18 @@ context(
         "$100,000.00",
         "$1,000.00",
       );
+    });
+
+    it("should display portfolio values in EUROC currency", () => {
+      togglePortfolioDenomination("EUROC");
+      assertPortfolioDenomination("EUROC");
+      cy.wait("@getDexPrices").then(() => {
+        expectPositiveValue("total_usd_amount");
+        expectPositiveValue("total_available_usd_amount");
+        expectPositiveValue("dfi_total_balance_usd_amount");
+        expectPositiveValue("portfolio_row_1_usd_amount");
+        expectPositiveValue("portfolio_row_2_usd_amount");
+      });
     });
 
     it("should display portfolio values in DFI currency", () => {

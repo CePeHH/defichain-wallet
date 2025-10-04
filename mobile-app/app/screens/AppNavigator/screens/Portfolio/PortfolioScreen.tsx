@@ -91,7 +91,10 @@ import {
   PortfolioButtonGroupTabKey,
   TotalPortfolio,
 } from "./components/TotalPortfolio";
-import { useTokenPrice } from "./hooks/TokenPrice";
+import {
+  SUPPORTED_BASE_DENOMINATIONS,
+  useTokenPrice,
+} from "./hooks/TokenPrice";
 import { PortfolioParamList } from "./PortfolioNavigator";
 import { useEvmTokenBalances } from "./hooks/EvmTokenBalances";
 
@@ -222,7 +225,29 @@ export function PortfolioScreen({ navigation }: Props): JSX.Element {
         denomination: denominationCurrency,
       }),
     );
-  }, [blockCount, denominationCurrency]);
+  }, [blockCount, denominationCurrency, client, dispatch]);
+
+  useEffect(() => {
+    if (
+      denominationCurrency !== PortfolioButtonGroupTabKey.USDC &&
+      denominationCurrency !== PortfolioButtonGroupTabKey.EUROC
+    ) {
+      return;
+    }
+
+    SUPPORTED_BASE_DENOMINATIONS.forEach((denomination) => {
+      if (denomination === denominationCurrency) {
+        return;
+      }
+
+      dispatch(
+        fetchDexPrice({
+          client,
+          denomination,
+        }),
+      );
+    });
+  }, [blockCount, denominationCurrency, client, dispatch]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
